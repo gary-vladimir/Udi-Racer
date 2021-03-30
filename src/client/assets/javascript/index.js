@@ -348,6 +348,10 @@ function createRace(player_id, track_id) {
 
 function getRace(id) {
     // GET request to `${SERVER}/api/races/${id}`
+    fetch(`${SERVER}/api/races/${id}`)
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.log(error));
 }
 
 function startRace(id) {
