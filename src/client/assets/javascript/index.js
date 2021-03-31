@@ -79,11 +79,13 @@ async function handleCreateRace() {
     renderAt('#race', renderRaceStartView());
 
     // TODO - Get player_id and track_id from the store
+    let player_id = store.player_id;
+    let track_id = store.track_id;
 
     // const race = TODO - invoke the API call to create the race, then save the result
-
+    const race = createRace(player_id, track_id);
     // TODO - update the store with the race id
-
+    store.race_id = race;
     // The race has been created, now start the countdown
     // TODO - call the async function runCountdown
 
@@ -99,7 +101,7 @@ function runRace(raceID) {
             console.log('running');
             // TODO - if the race info status property is "in-progress", update the leaderboard by calling:
             // renderAt('#leaderBoard', raceProgress(res.positions))
-            if (raceInfo === 'in-progress') {
+            if (getRace(raceID).status === 'in-progress') {
                 renderAt('#leaderBoard', raceProgress(res.positions));
             }
 
@@ -109,7 +111,7 @@ function runRace(raceID) {
             renderAt('#race', resultsView(res.positions)) // to render the results view
             reslove(res) // resolve the promise
             */
-            if (raceInfoStatus === 'finished') {
+            if (getRace(raceID).status === 'finished') {
                 clearInterval(raceInterval);
                 renderAt('#race', resultsView(res.positions));
                 Promise.resolve();
