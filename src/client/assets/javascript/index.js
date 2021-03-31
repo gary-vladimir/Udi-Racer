@@ -168,9 +168,10 @@ function handleSelectTrack(target) {
     store.track_id = target.id;
 }
 
-function handleAccelerate() {
+function handleAccelerate(target) {
     console.log('accelerate button clicked');
     // TODO - Invoke the API call to accelerate
+    accelerate(target.id);
 }
 
 // HTML VIEWS ------------------------------------------------
