@@ -85,13 +85,14 @@ async function handleCreateRace() {
     // const race = TODO - invoke the API call to create the race, then save the result
     const race = createRace(player_id, track_id);
     // TODO - update the store with the race id
-    store.race_id = race;
+    store.race_id = race.id;
     // The race has been created, now start the countdown
     // TODO - call the async function runCountdown
-
+    runCountdown();
     // TODO - call the async function startRace
-
+    startRace();
     // TODO - call the async function runRace
+    runRace(race.id);
 }
 
 function runRace(raceID) {
@@ -198,7 +199,7 @@ function renderRacerCars(racers) {
 
     return `
 		<ul id="racers">
-			${reuslts}
+			${results}
 		</ul>
 	`;
 }
