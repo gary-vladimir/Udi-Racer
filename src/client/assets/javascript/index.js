@@ -84,15 +84,14 @@ async function handleCreateRace() {
 
     // const race = TODO - invoke the API call to create the race, then save the result
     const race = createRace(player_id, track_id);
-    // TODO - update the store with the race id
-    store.race_id = race.ID;
+
     // The race has been created, now start the countdown
     // TODO - call the async function runCountdown
     await runCountdown();
     // TODO - call the async function startRace
     startRace(store.race_id);
     // TODO - call the async function runRace
-    runRace(store.race_id);
+    runRace(store.race_id - 1);
 }
 
 function runRace(raceID) {
@@ -160,7 +159,7 @@ function handleSelectPodRacer(target) {
     target.classList.add('selected');
 
     // TODO - save the selected racer to the store
-    store.player_id = target.id;
+    store.player_id = target;
 }
 
 function handleSelectTrack(target) {
@@ -176,13 +175,13 @@ function handleSelectTrack(target) {
     target.classList.add('selected');
 
     // TODO - save the selected track id to the store
-    store.track_id = target.id;
+    store.track_id = target;
 }
 
 function handleAccelerate(target) {
     console.log('accelerate button clicked');
     // TODO - Invoke the API call to accelerate
-    accelerate(target.id);
+    accelerate(store.race_id - 1);
 }
 
 // HTML VIEWS ------------------------------------------------
@@ -369,6 +368,10 @@ function createRace(player_id, track_id) {
         body: JSON.stringify(body),
     })
         .then((res) => res.json())
+        .then((res) => {
+            // TODO - update the store with the race id
+            store.race_id = res.ID;
+        })
         .catch((err) => console.log('Problem with createRace request::', err));
 }
 
