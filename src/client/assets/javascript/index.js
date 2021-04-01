@@ -102,7 +102,10 @@ function runRace(raceID) {
             // TODO - if the race info status property is "in-progress", update the leaderboard by calling:
             // renderAt('#leaderBoard', raceProgress(res.positions))
             if (getRace(raceID).status === 'in-progress') {
-                renderAt('#leaderBoard', raceProgress(res.positions));
+                renderAt(
+                    '#leaderBoard',
+                    raceProgress(getRace(raceID).positions)
+                );
             }
 
             //TODO - if the race info status property is "finished", run the following:
@@ -113,7 +116,7 @@ function runRace(raceID) {
             */
             if (getRace(raceID).status === 'finished') {
                 clearInterval(raceInterval);
-                renderAt('#race', resultsView(res.positions));
+                renderAt('#race', resultsView(getRace(raceID).positions));
                 Promise.resolve();
             }
         }, 500);
