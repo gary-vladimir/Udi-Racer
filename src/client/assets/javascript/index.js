@@ -88,13 +88,16 @@ async function handleCreateRace() {
     // TODO - update the store with the race id
     store.race_id = race.ID;
 
+    console.log('starting countDown');
     // The race has been created, now start the countdown
     // TODO - call the async function runCountdown
     await runCountdown();
+    console.log('starting race');
     // TODO - call the async function startRace
-    await startRace(store.race_id - 1);
+    startRace(store.race_id - 1);
     // TODO - call the async function runRace
-    runRace(store.race_id - 1);
+    //console.log('running race');
+    //runRace(store.race_id - 1);
 }
 
 function runRace(raceID) {
@@ -138,12 +141,12 @@ async function runCountdown() {
             let handle = setInterval(() => {
                 console.log(timer);
                 // run this DOM manipulation to decrement the countdown for the user
-                --timer;
+                timer--;
                 document.getElementById('big-numbers').innerHTML = timer;
                 // TODO - if the countdown is done, clear the interval, resolve the promise, and return
                 if (timer === 0) {
                     clearInterval(handle);
-                    Promise.resolve();
+                    resolve(Promise);
                 }
             }, 1000);
         });
