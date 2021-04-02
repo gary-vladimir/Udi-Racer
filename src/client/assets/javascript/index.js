@@ -81,12 +81,10 @@ async function handleCreateRace() {
 
     // render starting UI
     renderAt('#race', renderRaceStartView(track_id));
+    console.log('creating race');
 
     // const race = TODO - invoke the API call to create the race, then save the result
-    const race = await createRace(player_id, track_id);
-
-    // TODO - update the store with the race id
-    store.race_id = race.ID;
+    await createRace(player_id, track_id);
 
     console.log('starting countDown');
     // The race has been created, now start the countdown
@@ -97,7 +95,7 @@ async function handleCreateRace() {
     startRace(store.race_id - 1);
     // TODO - call the async function runRace
     //console.log('running race');
-    //runRace(store.race_id - 1);
+    await runRace(store.race_id - 1);
 }
 
 function runRace(raceID) {
@@ -168,7 +166,7 @@ function handleSelectPodRacer(target) {
     target.classList.add('selected');
 
     // TODO - save the selected racer to the store
-    store.player_id = target;
+    store.player_id = parseInt(target.id);
 }
 
 function handleSelectTrack(target) {
@@ -184,7 +182,7 @@ function handleSelectTrack(target) {
     target.classList.add('selected');
 
     // TODO - save the selected track id to the store
-    store.track_id = target;
+    store.track_id = parseInt(target.id);
 }
 
 function handleAccelerate(target) {
@@ -261,9 +259,9 @@ function renderCountdown(count) {
 function renderRaceStartView(track, racers) {
     return `
 		<header>
-			<h1>Race: ${track.name}</h1>
+			<h1>Race: ${track}</h1>
 		</header>
-		<main id="two-columns">
+		<main id="two-columns"> 
 			<section id="leaderBoard">
 				${renderCountdown(3)}
 			</section>
@@ -366,21 +364,23 @@ function getRacers() {
 }
 
 function createRace(player_id, track_id) {
-    player_id = parseInt(player_id);
-    track_id = parseInt(track_id);
     const body = { player_id, track_id };
-
     return fetch(`${SERVER}/api/races`, {
-        method: 'POST',
         ...defaultFetchOpts(),
+        method: 'POST',
         dataType: 'jsonp',
         body: JSON.stringify(body),
     })
-        .then((res) => res.json())
         .then((res) => {
-            return res;
+            return res.json();
         })
-        .catch((err) => console.log('Problem with createRace request::', err));
+        .then((res) => {
+            store.race_id = res.ID;
+            console.log(store.race_id);
+        })
+        .catch((e) => {
+            alert(e);
+        });
 }
 
 function getRace(id) {
@@ -398,9 +398,7 @@ function startRace(id) {
     return fetch(`${SERVER}/api/races/${id}/start`, {
         method: 'POST',
         ...defaultFetchOpts(),
-    })
-        .then((res) => res.json())
-        .catch((err) => console.log('Problem with getRace request::', err));
+    }).catch((err) => console.log('Problem with getRace request::', err));
 }
 
 function accelerate(id) {
@@ -410,11 +408,5 @@ function accelerate(id) {
     return fetch(`${SERVER}/api/races/${id}/accelerate`, {
         method: 'POST',
         ...defaultFetchOpts(),
-    })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            return data;
-        })
-        .catch((err) => console.log('Problem with getRace request::', err));
+    }).catch((err) => console.log('Problem with accelerate request::', err));
 }
